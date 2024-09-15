@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Button } from "/components/ui/button";
-import { Input } from "/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "/components/ui/select";
+import './App.css';
+import React, { useState } from 'react';
+import Button from './components/ui/button';
+import Input from './components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
 
 function App() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -46,14 +47,14 @@ function App() {
     }
   };
 
-  const handleAlgorithmChange = (value) => {
-    setAlgorithm(value);
+  const handleAlgorithmChange = (event) => {
+    setAlgorithm(event.target.value);
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-indigo-500">
       <h1 className="text-5xl font-bold text-white mb-8">Compression Toolkit</h1>
-      <input type="file" multiple onChange={handleFileChange} className="text-lg font-bold text-white bg-indigo-700 p-2 rounded-lg" />
+      <Input type="file" multiple onChange={handleFileChange} className="text-lg font-bold text-white bg-indigo-700 p-2 rounded-lg" />
       <div className="flex items-center space-x-2 mt-8">
         <span className="text-lg font-bold text-white">Compression Level:</span>
         <input type="range" min="1" max="100" value={compressionLevel} onChange={handleCompressionChange} className="w-64 h-2 bg-indigo-700 rounded-lg" />
@@ -64,13 +65,13 @@ function App() {
         <Button variant="secondary" className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg" onClick={downloadCompressedFiles}>Download Compressed Files</Button>
       </div>
       <div className="flex items-center space-x-2 mt-8">
-        <Select>
+        <Select value={algorithm} onChange={handleAlgorithmChange}>
           <SelectTrigger className="w-[180px] bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">
             <SelectValue placeholder="Select compression algorithm" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="lossless" onClick={() => handleAlgorithmChange('lossless')}>Lossless</SelectItem>
-            <SelectItem value="lossy" onClick={() => handleAlgorithmChange('lossy')}>Lossy</SelectItem>
+            <SelectItem value="lossless">Lossless</SelectItem>
+            <SelectItem value="lossy">Lossy</SelectItem>
           </SelectContent>
         </Select>
         <span className="text-lg font-bold text-white">Selected Algorithm: {algorithm}</span>
@@ -80,3 +81,4 @@ function App() {
 }
 
 export default App;
+
