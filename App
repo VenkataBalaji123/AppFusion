@@ -1,0 +1,84 @@
+// src/App.js
+import React, { useState } from 'react';
+import './styles/App.css';  // Import the new CSS file
+import Button from './components/ui/button';
+import Input from './components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
+
+function App() {
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [compressionLevel, setCompressionLevel] = useState(50);
+  const [compressedFiles, setCompressedFiles] = useState([]);
+  const [algorithm, setAlgorithm] = useState('lossless');
+
+  const handleFileChange = (event) => {
+    setSelectedFiles(event.target.files);
+  };
+
+  const handleCompressionChange = (event) => {
+    setCompressionLevel(event.target.value);
+  };
+
+  const handleCompress = () => {
+    const compressed = [];
+    for (const file of selectedFiles) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const compressedFile = compressFile(reader.result, compressionLevel);
+        compressed.push(compressedFile);
+        setCompressedFiles(compressed);
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  };
+
+  const compressFile = (file, compressionLevel) => {
+    // TO DO: implement compression algorithm
+    return file;
+  };
+
+  const downloadCompressedFiles = () => {
+    for (const file of compressedFiles) {
+      const blob = new Blob([file], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'compressed_file';
+      a.click();
+    }
+  };
+
+  const handleAlgorithmChange = (value) => {
+    setAlgorithm(value);
+  };
+
+  return (
+    <div className="container">
+      <h1>Compression Toolkit</h1>
+      <input type="file" multiple onChange={handleFileChange} />
+      <div className="flex items-center space-x-2 mt-8">
+        <span>Compression Level:</span>
+        <input type="range" min="1" max="100" value={compressionLevel} onChange={handleCompressionChange} />
+        <span>{compressionLevel}%</span>
+      </div>
+      <div className="flex items-center space-x-4 mt-8">
+        <Button onClick={handleCompress}>Compress</Button>
+        <Button onClick={downloadCompressedFiles}>Download Compressed Files</Button>
+      </div>
+      <div className="flex items-center space-x-2 mt-8">
+        <Select>
+          <SelectTrigger>
+            <SelectValue placeholder="Select compression algorithm" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="lossless" onClick={() => handleAlgorithmChange('lossless')}>Lossless</SelectItem>
+            <SelectItem value="lossy" onClick={() => handleAlgorithmChange('lossy')}>Lossy</SelectItem>
+          </SelectContent>
+        </Select>
+        <span>Selected Algorithm: {algorithm}</span>
+      </div>
+    </div>
+  );
+}
+
+export default App;
